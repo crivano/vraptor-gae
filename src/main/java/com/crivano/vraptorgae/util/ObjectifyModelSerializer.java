@@ -28,37 +28,43 @@ public class ObjectifyModelSerializer implements JsonSerializer<ObjectifyModel> 
 	@Override
 	public JsonElement serialize(ObjectifyModel src, Type typeOfSrc,
 			JsonSerializationContext context) {
-//		Gson gson = null; // (Gson) (Object) context;
-//		List<TypeAdapterFactory> factories = null;
-//
-//		Field[] fields = context.getClass().getDeclaredFields();
-//		for (Field field : fields) {
-//			field.setAccessible(true);
-//			String name = field.getName();
-//			try {
-//				gson = (Gson) field.get(context);
-//			} catch (Exception e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
+		// Gson gson = null; // (Gson) (Object) context;
+		// List<TypeAdapterFactory> factories = null;
+		//
+		// Field[] fields = context.getClass().getDeclaredFields();
+		// for (Field field : fields) {
+		// field.setAccessible(true);
+		// String name = field.getName();
+		// try {
+		// gson = (Gson) field.get(context);
+		// } catch (Exception e) {
+		// throw new RuntimeException(e);
+		// }
+		// }
 
 		JsonObject jsonObject = new JsonObject();
 		try {
 			jsonObject.addProperty("key", Key.create(src).getString());
 		} catch (Exception e) {
 		}
-		Field[] fields = src.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			if ((field.getModifiers() & Modifier.STATIC) != 0)
-				continue;
-			field.setAccessible(true);
-			String name = field.getName();
-			try {
-//				jsonObject.add(name, gson.toJsonTree(field.get(src)));
-				jsonObject.add(name, context.serialize(field.get(src)));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+		Class clazz = src.getClass();
+		while (true) {
+			Field[] fields = clazz.getDeclaredFields();
+			for (Field field : fields) {
+				if ((field.getModifiers() & Modifier.STATIC) != 0)
+					continue;
+				field.setAccessible(true);
+				String name = field.getName();
+				try {
+					// jsonObject.add(name, gson.toJsonTree(field.get(src)));
+					jsonObject.add(name, context.serialize(field.get(src)));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			}
+			if (clazz == Object.class || clazz.getSuperclass() == Object.class)
+				break;
+			clazz = clazz.getSuperclass();
 		}
 		return jsonObject;
 	}

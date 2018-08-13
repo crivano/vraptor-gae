@@ -116,7 +116,8 @@ public class CustomXStreamBuilder extends XStreamBuilderImpl {
 			}
 
 		});
-		xstream.registerConverter(new ReflectionConverter(xstream.getMapper(), xstream.getReflectionProvider()) {
+		xstream.registerConverter(new ReflectionConverter(xstream.getMapper(),
+				xstream.getReflectionProvider()) {
 
 			public boolean canConvert(Class clazz) {
 				return ObjectifyModel.class.isAssignableFrom(clazz);
@@ -125,14 +126,12 @@ public class CustomXStreamBuilder extends XStreamBuilderImpl {
 			@Override
 			public void marshal(Object obj, HierarchicalStreamWriter writer,
 					MarshallingContext context) {
-			    writer.startNode("key");
-			    writer.setValue(Key.create(obj).getString());
-			    writer.endNode();
-			    
+				writer.startNode("key");
+				writer.setValue(Key.create(obj).getString());
+				writer.endNode();
+
 				super.marshal(obj, writer, context);
 			}
-
-		
 
 		});
 		return xstream;
