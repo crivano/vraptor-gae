@@ -2,7 +2,6 @@ package com.crivano.vraptorgae.framework;
 
 import java.util.ResourceBundle;
 
-import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
 import com.crivano.vraptorgae.util.Util;
@@ -12,7 +11,7 @@ import br.com.caelum.vraptor.Converter;
 import br.com.caelum.vraptor.converter.ConversionError;
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 
-@Convert(LocalDate.class)
+@Convert(LocalTime.class)
 @ApplicationScoped
 public class LocalTimeConverter implements Converter<LocalTime> {
 
